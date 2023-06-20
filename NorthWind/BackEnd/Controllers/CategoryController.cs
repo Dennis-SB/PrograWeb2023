@@ -33,7 +33,6 @@ namespace BackEnd.Controllers
             };
         }
         #region Constructores
-
         public CategoryController()
         {
             categoryDAL = new CategoryDALImpl();
@@ -66,16 +65,20 @@ namespace BackEnd.Controllers
         #region Agregar
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public JsonResult Post([FromBody] CategoryModel category)
         {
+            categoryDAL.Add(Convertir(category));
+            return new JsonResult(category);
         }
         #endregion
 
         #region Modificar
         // PUT api/<CategoryController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public JsonResult Put([FromBody] CategoryModel category)
         {
+            categoryDAL.Update(Convertir(category));
+            return new JsonResult(category);
         }
         #endregion
 
@@ -84,6 +87,11 @@ namespace BackEnd.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Category category = new Category
+            {
+                CategoryId = id
+            };
+            categoryDAL.Remove(category);
         }
         #endregion
     }
