@@ -1,4 +1,5 @@
-﻿using DAL.Implementations;
+﻿using BackEnd.Models;
+using DAL.Implementations;
 using DAL.Interfaces;
 using Entities.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,25 @@ namespace BackEnd.Controllers
     public class CategoryController : ControllerBase
     {
         private ICategoryDAL categoryDAL;
+        private CategoryModel Convertir(Category category)
+        {
+            return new CategoryModel
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description
+            };
+        }
 
+        private Category Convertir(CategoryModel category)
+        {
+            return new Category
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description
+            };
+        }
         #region Constructores
         public CategoryController()
         {
@@ -26,7 +45,12 @@ namespace BackEnd.Controllers
         public JsonResult Get()
         {
             IEnumerable<Category> categories = categoryDAL.GetAll();
-            return new JsonResult(categories);
+            List<CategoryModel> models = new List<CategoryModel>();
+            foreach (var category in categories)
+            {
+                models.Add(Convertir(category));
+            }
+            return new JsonResult(models);
         }
 
         // GET api/<CategoryController>/5
@@ -34,23 +58,27 @@ namespace BackEnd.Controllers
         public JsonResult Get(int id)
         {
             Category category = categoryDAL.Get(id);
-            return new JsonResult(category);
+            return new JsonResult(Convertir(category));
         }
         #endregion
 
         #region Agregar
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public JsonResult Post([FromBody] CategoryModel category)
         {
+            categoryDAL.Add(Convertir(category));
+            return new JsonResult(category);
         }
         #endregion
 
         #region Modificar
         // PUT api/<CategoryController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public JsonResult Put([FromBody] CategoryModel category)
         {
+            categoryDAL.Update(Convertir(category));
+            return new JsonResult(category);
         }
         #endregion
 
@@ -59,6 +87,11 @@ namespace BackEnd.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Category category = new Category
+            {
+                CategoryId = id
+            };
+            categoryDAL.Remove(category);
         }
         #endregion
     }
