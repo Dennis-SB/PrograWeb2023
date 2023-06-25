@@ -12,20 +12,26 @@ namespace DAL.Implementations
 {
     public class DALGenericoImpl<TEntity> : IDALGenerico<TEntity> where TEntity : class
     {
+
         protected readonly NorthWindContext Context;
+
         public DALGenericoImpl(NorthWindContext context)
         {
             Context = context;
         }
+
+
         public bool Add(TEntity entity)
         {
             try
             {
+
                 Context.Set<TEntity>().Add(entity);
                 return true;
             }
             catch (Exception)
             {
+
                 return false;
             }
         }
@@ -38,6 +44,7 @@ namespace DAL.Implementations
             }
             catch (Exception)
             {
+
                 throw;
             }
         }
@@ -50,30 +57,33 @@ namespace DAL.Implementations
             }
             catch (Exception)
             {
+
                 return null;
             }
         }
 
-        public TEntity Get(int id)
+        public async Task<TEntity> Get(int id)
         {
             try
             {
-                return Context.Set<TEntity>().Find(id);
+                return await Context.Set<TEntity>().FindAsync(id);
             }
             catch (Exception)
             {
+
                 return null;
             }
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
             try
             {
-                return Context.Set<TEntity>().ToList();
+                return await Context.Set<TEntity>().ToListAsync();
             }
             catch (Exception)
             {
+
                 return null;
             }
         }
@@ -88,6 +98,7 @@ namespace DAL.Implementations
             }
             catch (Exception)
             {
+
                 return false;
             }
         }
@@ -100,6 +111,7 @@ namespace DAL.Implementations
             }
             catch (Exception)
             {
+
                 throw;
             }
         }
@@ -112,6 +124,7 @@ namespace DAL.Implementations
             }
             catch (Exception)
             {
+
                 return null;
             }
         }
@@ -125,6 +138,7 @@ namespace DAL.Implementations
             }
             catch (Exception)
             {
+
                 return false;
             }
         }

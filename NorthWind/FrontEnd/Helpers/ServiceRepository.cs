@@ -10,11 +10,11 @@ namespace FrontEnd.Helpers
     public class ServiceRepository
     {
         public HttpClient Client { get; set; }
+
         public ServiceRepository()
         {
             Client = new HttpClient();
             Client.BaseAddress = new Uri("http://localhost:5167");
-
         }
         public HttpResponseMessage GetResponse(string url)
         {
